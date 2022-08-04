@@ -4,21 +4,21 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
     
-        $ID_LIBRO = $_GET['ID_LIBRO'];
+        $ID_PELICULA = $_GET['ID_PELICULA'];
         
-        $sql = "SELECT ID_LIBRO FROM libros WHERE ID_LIBRO='$ID_LIBRO'";
+        $sql = "SELECT ID_PELICULA FROM pelicula WHERE ID_PELICULA='$ID_PELICULA'";
         $query = $mysqli->query($sql);
         $resultado = $query->num_rows;
         // echo($resultado);
         
         if($resultado==0){
             
-            echo "No existe el libro";
+            echo "No existe la pelicula";
         }else{
             
-            $sql = "DELETE FROM libros WHERE ID_LIBRO='$ID_LIBRO'";
+            $sql = "DELETE FROM pelicula WHERE ID_PELICULA='$ID_PELICULA'";
             $query = $mysqli->query($sql);
-            echo "Libro eliminado correctamente";
+            echo "Pelicula eliminado correctamente";
         }
 
     }else{

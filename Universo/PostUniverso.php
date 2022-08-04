@@ -13,11 +13,11 @@
 
         $sql = "INSERT INTO universomagico VALUES ('$ID_UNIVERSO', '$HISTORIA_UNIVERSO', '$TEMA_UNIVERSO', '$AUTOR_UNIVERSO', '$TIPO_UNIVERSO')";
         $query = $mysqli->query($sql);
-        echo "Universo guardado correctamente";
+        echo ("Universo guardado correctamente");
     }else{
         echo("algo salio mal final");
         header("HTTP/1.1 501 Not Implemented");
-        echo "Error de metodo";
+        echo ("Error de metodo");
     }
     
 ?>
