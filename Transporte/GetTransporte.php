@@ -5,7 +5,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'GET'){
     
-        $sql = "SELECT * FROM Transporte";
+        $sql = "SELECT * FROM transporte";
         $query = $mysqli->query($sql);
         
         $datos = array();

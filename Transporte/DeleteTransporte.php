@@ -4,9 +4,9 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
     
-        $id = $_GET['Id_Transporte'];
+        $id = $_GET['ID_TRANSPORTE'];
         
-        $sql = "SELECT Id_Transporte FROM harrypotter WHERE id='$id_transporte'";
+        $sql = "SELECT ID_TRANSPORTE FROM transporte WHERE ID_TRANSPORTE='$ID_TRANSPORTE'";
         $query = $mysqli->query($sql);
         $resultado = $query->num_rows;
         // echo($resultado);
@@ -16,7 +16,7 @@
             echo "No existe el Transporte";
         }else{
             
-            $sql = "DELETE FROM harrypotter WHERE id='$id_transporte'";
+            $sql = "DELETE FROM transporte WHERE ID_TRANSPORTE='$ID_TRANSPORTE'";
             $query = $mysqli->query($sql);
             echo "Transporte eliminado correctamente";
         }
