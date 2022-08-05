@@ -1,6 +1,6 @@
 <?php
 
-    require "conexion.php";
+    require "../conexion.php";
 
     if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
 
