@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
   else {
     //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
     //"SELECT * FROM escuela.ID_ESCUELA LEFT JOIN casa ON escuela.ID_ESCUELA = casa.ID_CASA"
-    $sql = $dbConn->prepare("SELECT * FROM casa");
+    $sql = $dbConn->prepare("SELECT * FROM casa LEFT JOIN escuela ON escuela.ID_ESCUELA = casa.ID_CASA;");
     $sql->execute();
     $sql->setFetchMode(PDO::FETCH_ASSOC);
     header("HTTP/1.1 200 OK");
