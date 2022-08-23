@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE')
       header("HTTP/1.1 400 Bad Request"); //error 400 por no ejecutar el delete
 
     }else{
-      $ID_ESCUELA = $_GET['ID_UNIVERSO'];
+      $ID_UNIVERSO = $_GET['ID_UNIVERSO'];
       $statement = $dbConn->prepare("DELETE FROM universomagico where ID_UNIVERSO=:ID_UNIVERSO");
       $statement->bindValue(':ID_UNIVERSO', $ID_UNIVERSO);
       $statement->execute();
