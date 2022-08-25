@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
     //VALIDA LA BUSQUEDA  
   if (isset($_GET['ID_CASA']) && isset ($_GET['ID_ESCUELA']))
   {
-    $sql = $dbConn->prepare("SELECT * FROM casa LEFT JOIN escuela ON escuela.ID_ESCUELA = casa.ID_CASA");
+    $sql = $dbConn->prepare("SELECT * FROM casa where ID_CASA=:ID_CASA AND ID_ESCUELA=:ID_ESCUELA ");
     $sql->bindValue(':ID_CASA', $_GET['ID_CASA']);
     $sql->bindValue(':ID_ESCUELA', $_GET['ID_ESCUELA']);
     $sql->execute();
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
   else {
     //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
     //"SELECT * FROM escuela.ID_ESCUELA LEFT JOIN casa ON escuela.ID_ESCUELA = casa.ID_CASA"
-    $sql = $dbConn->prepare("SELECT * FROM casa LEFT JOIN escuela ON escuela.ID_ESCUELA = casa.ID_ESCUELA");
+    $sql = $dbConn->prepare("SELECT casa.NOMBRE_CASA, casa.COLOR_CASA, casa.VIRTUD_CASA, escuela.NOMBRE_ESCUELA, escuela.DIRECTOR_ESCUELA FROM casa INNER JOIN escuela ON casa.ID_ESCUELA= escuela.ID_ESCUELA");
     $sql->execute();
     $sql->setFetchMode(PDO::FETCH_ASSOC);
     header("HTTP/1.1 200 OK");

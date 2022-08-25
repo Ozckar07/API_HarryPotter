@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
   else {
     //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
     //"SELECT * FROM universomagico.ID_UNIVERSO LEFT JOIN juego ON universomagico.ID_UNIVERSO = juego.ID_JUEGO"
-    $sql = $dbConn->prepare("SELECT * FROM juego");
+    $sql = $dbConn->prepare("SELECT juego.NOMBRE_JUEGO, juego.CATEGORIA_JUEGO, juego.INSTRUMENTO_JUEGO, universomagico.TIPO_UNIVERSO, universomagico.TEMA_UNIVERSO FROM juego INNER JOIN universomagico ON juego.ID_UNIVERSO= universomagico.ID_UNIVERSO");
     $sql->execute();
     $sql->setFetchMode(PDO::FETCH_ASSOC);
     header("HTTP/1.1 200 OK");
