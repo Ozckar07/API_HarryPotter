@@ -39,9 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
   }
   else {
     //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
-    //"SELECT * FROM pelicula_personaje.ID_LIBRO LEFT JOIN PELICULA ON pelicula_personaje.ID_LIBRO = PELICULA.ID_PELICULA"
-    $sql = $dbConn->prepare("SELECT personaje.APELLIDO_PERSONAJE, personaje.NOMBRE_PERSONAJE, personaje.FECHA_NACIMIENTO_PERSONAJE, personaje.ACTOR_PERSONAJE, personaje.FOTO_PERSONAJE, personaje.PAPEL_PERSONAJE, pelicula.TITULO_PELICULA, pelicula.PRODUCTORA_PELICULA, pelicula.SINOPSIS_PELICULA, pelicula.ANO_ESTRENO_PELICULA FROM pelicula_personaje LEFT JOIN personaje ON pelicula_personaje.ID_PERSONAJE= personaje.ID_PERSONAJE LEFT JOIN pelicula ON pelicula_personaje.ID_PELICULA = pelicula.ID_PELICULA");
-    //$sql = $dbConn->prepare("SELECT * FROM pelicula_personaje JOIN personaje ON pelicula_personaje.ID_PERSONAJE = personaje.ID_PERSONAJE JOIN libros ON pelicula_personaje.ID_PERSONAJE = libros.ID_LIBRO JOIN pelicula ON pelicula_personaje.ID_PERSONAJE = pelicula.ID_PELICULA JOIN universomagico ON pelicula_personaje.ID_PERSONAJE = universomagico.ID_UNIVERSO");
+    $sql = $dbConn->prepare("SELECT personaje.APELLIDO_PERSONAJE, personaje.NOMBRE_PERSONAJE, personaje.FECHA_NACIMIENTO_PERSONAJE, personaje.PAPEL_PERSONAJE, pelicula.TITULO_PELICULA, pelicula.SINOPSIS_PELICULA, pelicula.DIRECTOR_PELICULA, pelicula.PRODUCTORA_PELICULA, pelicula.ANO_ESTRENO_PELICULA FROM pelicula INNER JOIN pelicula_personaje ON pelicula_personaje.ID_PELICULA=pelicula.ID_PELICULA INNER JOIN personaje ON pelicula_personaje.ID_PERSONAJE = personaje.ID_PERSONAJE");
     $sql->execute();
     $sql->setFetchMode(PDO::FETCH_ASSOC);
     header("HTTP/1.1 200 OK");
