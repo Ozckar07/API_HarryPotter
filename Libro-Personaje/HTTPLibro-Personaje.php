@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 // CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-  if (isset ($_GET['ID_LIBRO']) && isset ($_GET['ID_PERSONAJE'])){
+  if (isset ($_POST['ID_LIBRO']) && isset ($_POST['ID_PERSONAJE'])){
     $sql = $dbConn->prepare("SELECT * FROM libro_personajes WHERE ID_LIBRO=:ID_LIBRO AND ID_PERSONAJE=:ID_PERSONAJE");
     $sql->bindValue(':ID_PERSONAJE', $_POST['ID_PERSONAJE']);
     $sql->bindValue(':ID_LIBRO', $_POST['ID_LIBRO']);
