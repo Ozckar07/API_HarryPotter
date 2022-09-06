@@ -11,22 +11,22 @@ $dbConn =  connect($db);
 if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
     //VALIDA LA BUSQUEDA  
-  if (isset($_GET['ID_LIBRO']))
+  if (isset($_GET['TITULO_LIBRO']))
   {
-    $sql = $dbConn->prepare("SELECT * FROM libros where ID_LIBRO=:ID_LIBRO ");
-    $sql->bindValue(':ID_LIBRO', $_GET['ID_LIBRO']);
+    $sql = $dbConn->prepare("SELECT * FROM libros WHERE TITULO_LIBRO");
+    $sql->bindValue(':TITULO_LIBRO', $_GET['TITULO_LIBRO']);
     $sql->execute();
     $row_count =$sql->fetchColumn();
     //VALIDA SI SE ENCUENTRAN O NO LOS DATOS
     if ($row_count==0) {
       header("HTTP/1.1 204 No Content");
-      echo "No existe el registro de la libros con id = ",$_GET['ID_LIBRO'];
+      echo "No existe el registro de la libros con nombre = ",$_GET['TITULO_LIBRO'];
       
     }else{
     //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
       echo "Si existe el registro  ";
-      $sql = $dbConn->prepare("SELECT * FROM libros where ID_LIBRO=:ID_LIBRO");
-      $sql->bindValue(':ID_LIBRO', $_GET['ID_LIBRO']);
+      $sql = $dbConn->prepare("SELECT * FROM libros WHERE libros.TITULO_LIBRO LIKE TITULO_LIBRO=:TITULO_LIBRO ");
+      $sql->bindValue(':TITULO_LIBRO', $_GET['TITULO_LIBRO']);
       $sql->execute();
       header("HTTP/1.1 200 OK");
       echo json_encode(  $sql->fetch(PDO::FETCH_ASSOC));

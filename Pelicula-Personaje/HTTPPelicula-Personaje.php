@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     $row_count =$sql->fetchColumn();
     if ($row_count>0) {
       header("HTTP/1.1 204 No Content");
-      echo "Ya existe la ID_PERSONAJE ", $_POST['ID_PERSONAJE'];
+      echo "Ya existe la ID_PERSONAJE ", $_POST['ID_PERSONAJE'], "con relacion a la pelicula",$_POST['ID_PELICULA'] ;
     }else{
       $input = $_POST;
       $sql = "INSERT INTO pelicula_personaje (ID_PERSONAJE, ID_PELICULA)
