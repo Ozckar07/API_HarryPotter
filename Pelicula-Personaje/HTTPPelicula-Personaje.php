@@ -11,27 +11,25 @@ $dbConn =  connect($db);
 if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
     //VALIDA LA BUSQUEDA  
-  if (isset ($_GET['ID_PELICULA']) && isset ($_GET['ID_PERSONAJE']))
+  if (isset ($_GET['APELLIDO_PERSONAJE']))
   {
-    $sql = $dbConn->prepare("SELECT * FROM pelicula_personaje WHERE ID_PELICULA=:ID_PELICULA AND ID_PERSONAJE=:ID_PERSONAJE");
-    $sql->bindValue(':ID_PELICULA', $_GET['ID_PELICULA']);
-    $sql->bindValue(':ID_PERSONAJE', $_GET['ID_PERSONAJE']);
+    $sql = $dbConn->prepare("SELECT * FROM `pelicula_personaje` LEFT JOIN personaje ON pelicula_personaje.ID_PERSONAJE=personaje.ID_PERSONAJE RIGHT JOIN pelicula ON pelicula_personaje.ID_PELICULA=pelicula.ID_PELICULA RIGHT JOIN casa ON casa.ID_CASA=personaje.ID_CASA RIGHT JOIN escuela ON casa.ID_ESCUELA=escuela.ID_ESCUELA LEFT JOIN libro_personajes ON libro_personajes.ID_PERSONAJE=personaje.ID_PERSONAJE LEFT JOIN libros ON libro_personajes.ID_LIBRO=libros.ID_LIBRO WHERE APELLIDO_PERSONAJE LIKE '%' :APELLIDO_PERSONAJE '%'");
+    $sql->bindValue(':APELLIDO_PERSONAJE', $_GET['APELLIDO_PERSONAJE']);
     $sql->execute();
     $row_count =$sql->fetchColumn();
     //VALIDA SI SE ENCUENTRAN O NO LOS DATOS
     if ($row_count==0) {
       header("HTTP/1.1 204 No Content");
-      echo "No existe la consulta con id =  ", $_GET['ID_PERSONAJE'];
+      echo "No existe la consulta con id =  ", $_GET['APELLIDO_PERSONAJE'];
       
     }else{
     //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
       
-      $sql = $dbConn->prepare("SELECT * FROM pelicula_personaje WHERE ID_PELICULA=:ID_PELICULA AND ID_PERSONAJE=:ID_PERSONAJE");
-      $sql->bindValue(':ID_PERSONAJE', $_GET['ID_PERSONAJE']);
-      $sql->bindValue(':ID_PELICULA', $_GET['ID_PELICULA']);
+      $sql = $dbConn->prepare("SELECT personaje.NOMBRE_PERSONAJE, casa.NOMBRE_CASA, escuela.NOMBRE_ESCUELA, pelicula.TITULO_PELICULA, libros.TITULO_LIBRO, libros.AUTOR_LIBRO FROM pelicula_personaje LEFT JOIN personaje ON pelicula_personaje.ID_PERSONAJE=personaje.ID_PERSONAJE RIGHT JOIN pelicula ON pelicula_personaje.ID_PELICULA=pelicula.ID_PELICULA RIGHT JOIN casa ON casa.ID_CASA=personaje.ID_CASA RIGHT JOIN escuela ON casa.ID_ESCUELA=escuela.ID_ESCUELA LEFT JOIN libro_personajes ON libro_personajes.ID_PERSONAJE=personaje.ID_PERSONAJE LEFT JOIN libros ON libro_personajes.ID_LIBRO=libros.ID_LIBRO WHERE APELLIDO_PERSONAJE LIKE '%' :APELLIDO_PERSONAJE '%'");
+      $sql->bindValue(':APELLIDO_PERSONAJE', $_GET['APELLIDO_PERSONAJE']);
       $sql->execute();
       header("HTTP/1.1 200 OK");
-      echo json_encode(  $sql->fetch(PDO::FETCH_ASSOC));
+      echo json_encode(  $sql->fetchAll(PDO::FETCH_ASSOC));
       echo "Si existe el registro  ";
       exit();
     }
@@ -39,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
   }
   else {
     //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
-    $sql = $dbConn->prepare("SELECT personaje.APELLIDO_PERSONAJE, personaje.NOMBRE_PERSONAJE, personaje.FECHA_NACIMIENTO_PERSONAJE, personaje.PAPEL_PERSONAJE, pelicula.TITULO_PELICULA, pelicula.SINOPSIS_PELICULA, pelicula.DIRECTOR_PELICULA, pelicula.PRODUCTORA_PELICULA, pelicula.ANO_ESTRENO_PELICULA FROM pelicula INNER JOIN pelicula_personaje ON pelicula_personaje.ID_PELICULA=pelicula.ID_PELICULA INNER JOIN personaje ON pelicula_personaje.ID_PERSONAJE = personaje.ID_PERSONAJE");
+    //SELECT pelicula.TITULO_PELICULA, pelicula.ID_PELICULA, personaje.NOMBRE_PERSONAJE, personaje.ID_PERSONAJE FROM `pelicula_personaje` RIGHT JOIN personaje ON personaje.ID_PERSONAJE=pelicula_personaje.ID_PERSONAJE LEFT JOIN pelicula on pelicula.ID_PELICULA=pelicula_personaje.ID_PELICULA ORDER BY pelicula.TITULO_PELICULA;
+    $sql = $dbConn->prepare("SELECT * FROM pelicula_personaje");
     $sql->execute();
     $sql->setFetchMode(PDO::FETCH_ASSOC);
     header("HTTP/1.1 200 OK");

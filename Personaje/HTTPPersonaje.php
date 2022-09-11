@@ -11,26 +11,22 @@ $dbConn =  connect($db);
 if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
     //VALIDA LA BUSQUEDA  
-  if (isset($_GET['ID_PERSONAJE']) && isset ($_GET['ID_CASA']) && isset ($_GET['ID_UNIVERSO']))
+  if (isset($_GET['ID_PERSONAJE']))
   {
-    $sql = $dbConn->prepare("SELECT * FROM personaje where ID_PERSONAJE=:ID_PERSONAJE AND ID_CASA=:ID_CASA AND ID_UNIVERSO=:ID_UNIVERSO");
+    $sql = $dbConn->prepare("SELECT * FROM personaje where ID_PERSONAJE=:ID_PERSONAJE");
     $sql->bindValue(':ID_PERSONAJE', $_GET['ID_PERSONAJE']);
-    $sql->bindValue(':ID_CASA', $_GET['ID_CASA']);
-    $sql->bindValue(':ID_UNIVERSO', $_GET['ID_UNIVERSO']);
     $sql->execute();
     $row_count =$sql->fetchColumn();
     //VALIDA SI SE ENCUENTRAN O NO LOS DATOS
     if ($row_count==0) {
       header("HTTP/1.1 204 No Content");
-      echo "No existe el registro de la personaje con id = ",$_GET['ID_PERSONAJE'], " de la casa con id =  ", $_GET['ID_CASA'], " perteneciente a la universo con id= ", $_GET['ID_UNIVERSO'];
+      echo "No existe el registro de la personaje con id = ",$_GET['ID_PERSONAJE'];
       
     }else{
     //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
       echo "Si existe el registro  ";
-      $sql = $dbConn->prepare("SELECT * FROM personaje where ID_PERSONAJE=:ID_PERSONAJE AND ID_CASA=:ID_CASA AND ID_UNIVERSO=:ID_UNIVERSO");
+      $sql = $dbConn->prepare("SELECT * FROM personaje where ID_PERSONAJE=:ID_PERSONAJE");
       $sql->bindValue(':ID_PERSONAJE', $_GET['ID_PERSONAJE']);
-      $sql->bindValue(':ID_CASA', $_GET['ID_CASA']);
-      $sql->bindValue(':ID_UNIVERSO', $_GET['ID_UNIVERSO']);
       $sql->execute();
       header("HTTP/1.1 200 OK");
       echo json_encode(  $sql->fetch(PDO::FETCH_ASSOC));
@@ -40,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
   }
   else {
     //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
-    //"SELECT * FROM universo.ID_UNIVERSO LEFT JOIN casa ON universo.ID_UNIVERSO = casa.ID_CASA"
     $sql = $dbConn->prepare("SELECT * FROM personaje");
     $sql->execute();
     $sql->setFetchMode(PDO::FETCH_ASSOC);
@@ -89,33 +84,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 //BORRA EL ELEMENTO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE')
 {
-  if (isset($_GET['ID_PERSONAJE']) && isset ($_GET['ID_CASA']) && isset ($_GET['ID_UNIVERSO'])){
-    $sql = $dbConn->prepare("SELECT COUNT(*) FROM personaje where ID_PERSONAJE=:ID_PERSONAJE AND ID_CASA=:ID_CASA AND ID_UNIVERSO=:ID_UNIVERSO ");
+  if (isset($_GET['ID_PERSONAJE'])){
+    $sql = $dbConn->prepare("SELECT COUNT(*) FROM personaje where ID_PERSONAJE=:ID_PERSONAJE");
     $sql->bindValue(':ID_PERSONAJE', $_GET['ID_PERSONAJE']);
-    $sql->bindValue(':ID_CASA', $_GET['ID_CASA']);
-    $sql->bindValue(':ID_UNIVERSO', $_GET['ID_UNIVERSO']);
     $sql->execute();
     $row_count =$sql->fetchColumn();
     // echo $row_count;
     if ($row_count == 0) {
-      echo "No existe el registro ",$_GET['ID_PERSONAJE'], " del libro", $_GET['ID_CASA'], " en el universo ", $_GET['ID_UNIVERSO'];
+      echo "No existe el registro ",$_GET['ID_PERSONAJE'];
       header("HTTP/1.1 400 Bad Request"); //error 400 por no ejecutar el delete
 
     }else{
       $ID_PERSONAJE = $_GET['ID_PERSONAJE'];
-      $ID_CASA = $_GET['ID_CASA'];
-      $ID_UNIVERSO = $_GET['ID_UNIVERSO'];
-      $statement = $dbConn->prepare("DELETE FROM personaje where ID_PERSONAJE=:ID_PERSONAJE AND ID_CASA=:ID_CASA AND ID_UNIVERSO=:ID_UNIVERSO");
+      $statement = $dbConn->prepare("DELETE FROM personaje where ID_PERSONAJE=:ID_PERSONAJE");
       $statement->bindValue(':ID_PERSONAJE', $ID_PERSONAJE);
-      $statement->bindValue(':ID_CASA', $ID_CASA);
-      $statement->bindValue(':ID_UNIVERSO', $ID_UNIVERSO);
       $statement->execute();
-      echo "Eliminado el registro ",$_GET['ID_PERSONAJE'], " de la casa ", $_GET['ID_CASA'], " de la universo ", $_GET['ID_UNIVERSO'];
+      echo "Eliminado el registro ",$_GET['ID_PERSONAJE'];
     	header("HTTP/1.1 200 OK");
     	exit();
     }
   }else{
-    echo "El parametro ID_PERSONAJE, ID_CASA y ID_UNIVERSO es obligatorio para poder eliminar";
+    echo "El parametro ID_PERSONAJE es obligatorio para poder eliminar";
   }
 
 
@@ -124,37 +113,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE')
 //Actualizar
 if ($_SERVER['REQUEST_METHOD'] == 'PUT')
 {
-  if (isset($_GET['ID_PERSONAJE']) && isset($_GET['ID_CASA']) && isset($_GET['ID_UNIVERSO'])){
-    $sql = $dbConn->prepare("SELECT * FROM personaje where ID_PERSONAJE=:ID_PERSONAJE AND ID_CASA=:ID_CASA AND ID_UNIVERSO=:ID_UNIVERSO ");
+  if (isset($_GET['ID_PERSONAJE'])){
+    $sql = $dbConn->prepare("SELECT * FROM personaje where ID_PERSONAJE=:ID_PERSONAJE");
     $sql->bindValue(':ID_PERSONAJE', $_GET['ID_PERSONAJE']);
-    $sql->bindValue(':ID_CASA', $_GET['ID_CASA']);
-    $sql->bindValue(':ID_UNIVERSO', $_GET['ID_UNIVERSO']);
     $sql->execute();
     $row_count =$sql->fetchColumn();
     if ($row_count>0) {
       $input = $_GET;
       $postId = $input['ID_PERSONAJE'];
-      $postId2 = $input['ID_CASA'];
-      $postId3 = $input['ID_UNIVERSO'];
       $fields = getParams($input);
 
       $sql = "UPDATE personaje
             SET $fields
-            WHERE ID_PERSONAJE='$postId' AND ID_CASA='$postId2' AND ID_UNIVERSO='$postId3'";
+            WHERE ID_PERSONAJE='$postId'";
 
       $statement = $dbConn->prepare($sql);
       bindAllValues($statement, $input);
 
       $statement->execute();
       header("HTTP/1.1 200 OK");
-      echo "Actualizada exitosamente la personaje ", $_GET['ID_PERSONAJE'], " del libro ", $_GET['ID_CASA'], " del universo ", $_GET['ID_UNIVERSO'];
+      echo "Actualizada exitosamente la personaje ", $_GET['ID_PERSONAJE'];
       exit();
     }else{
       header("HTTP/1.1 204 No Content");
-      echo "No existe la personaje ", $_GET['ID_PERSONAJE'], " no hacer parte del libro ", $_GET['ID_CASA'], " y/o del universo ", $_GET['ID_UNIVERSO'] ;
+      echo "No existe la personaje ", $_GET['ID_PERSONAJE'];
     }
   }else{
-    echo "El parametro ID_PERSONAJE, ID_CASA y ID_UNIVERSO es obligatorio para poder actualizar";
+    echo "El parametro ID_PERSONAJE, ID_CASA es obligatorio para poder actualizar";
   }
 }
 

@@ -36,8 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
   }
   else {
     //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
-    //"SELECT * FROM escuela.ID_ESCUELA LEFT JOIN casa ON escuela.ID_ESCUELA = casa.ID_CASA"
-    $sql = $dbConn->prepare("SELECT pelicula.TITULO_PELICULA, pelicula.DIRECTOR_PELICULA, pelicula.ANO_ESTRENO_PELICULA, pelicula.SINOPSIS_PELICULA FROM pelicula ");
+    $sql = $dbConn->prepare("SELECT * FROM pelicula ");
     $sql->execute();
     $sql->setFetchMode(PDO::FETCH_ASSOC);
     header("HTTP/1.1 200 OK");
