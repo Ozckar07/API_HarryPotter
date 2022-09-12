@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 }
 
-// CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+// ============================================================CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_PELICULA'])) {
         $sql = $dbConn->prepare("SELECT * FROM pelicula where ID_PELICULA=:ID_PELICULA");
@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 }
 
-//BORRA EL ELEMENTO SEGUN EL ID
+//======================================================================BORRA EL ELEMENTO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if (isset($_GET['ID_PELICULA'])) {
         $sql = $dbConn->prepare("SELECT COUNT(*) FROM pelicula where ID_PELICULA=:ID_PELICULA");
@@ -146,10 +146,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     } else {
         echo "El parametro ID_PELICULA es obligatorio para poder eliminar";
     }
-
 }
 
-//Actualizar
+//===================================================================MODIFICA Y ACTUALIZA LOS REGISTROS DE PELICULA
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_PELICULA'])) {
         $sql = $dbConn->prepare("SELECT * FROM pelicula where ID_PELICULA=:ID_PELICULA");

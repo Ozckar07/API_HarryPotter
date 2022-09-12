@@ -4,13 +4,10 @@ include "../utils.php";
 
 $dbConn = connect($db);
 
-/*
-REALIZA BUSQUEDA ESPECIFICA
- */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //VALIDA LA BUSQUEDA
+    //=========================================================REALIZA UN A BUSQUEDA A TRACES DEL NOMBRE DEL JUEGO
     if (isset($_GET['NOMBRE_JUEGO'])) {
-        $sql = $dbConn->prepare("SELECT * FROM `juego` 
+        $sql = $dbConn->prepare("SELECT * FROM `juego`
         WHERE juego.NOMBRE_JUEGO LIKE '%' :NOMBRE_JUEGO '%'
         ORDER BY juego.NOMBRE_JUEGO");
         $sql->bindValue(':NOMBRE_JUEGO', $_GET['NOMBRE_JUEGO']);
@@ -20,11 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($row_count == 0) {
             header("HTTP/1.1 204 No Content");
             echo "No existe el registro de la juego con id = ", $_GET['NOMBRE_JUEGO'];
-
         } else {
             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
             echo "Si existe el registro  ";
-            $sql = $dbConn->prepare("SELECT juego.NOMBRE_JUEGO, juego.INSTRUMENTO_JUEGO, juego.DESCRIPCION_JUEGO, juego.CATEGORIA_JUEGO FROM `juego` 
+            $sql = $dbConn->prepare("SELECT juego.NOMBRE_JUEGO, juego.INSTRUMENTO_JUEGO, juego.DESCRIPCION_JUEGO, juego.CATEGORIA_JUEGO FROM `juego`
             WHERE juego.NOMBRE_JUEGO LIKE '%' :NOMBRE_JUEGO '%'
             ORDER BY juego.NOMBRE_JUEGO");
             $sql->bindValue(':NOMBRE_JUEGO', $_GET['NOMBRE_JUEGO']);
@@ -33,9 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
             exit();
         }
-
     } else {
-        //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
+        //MUESTRA TODOS LOS REGISTRO DE LA TABLA JUEGO
         $sql = $dbConn->prepare("SELECT * FROM juego");
         $sql->execute();
         $sql->setFetchMode(PDO::FETCH_ASSOC);
@@ -43,10 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo json_encode($sql->fetchAll());
         exit();
     }
-
 }
 
-// CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+// ========================================================================CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_JUEGO'])) {
         $sql = $dbConn->prepare("SELECT * FROM juego where ID_JUEGO=:ID_JUEGO");
@@ -60,8 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "Guardado Exitosamente";
             $input = $_POST;
             $sql = "INSERT INTO juego (ID_JUEGO, ID_UNIVERSO, NOMBRE_JUEGO, INSTRUMENTO_JUEGO, CATEGORIA_JUEGO)
-            VALUES
-           (:ID_JUEGO, :ID_UNIVERSO, :NOMBRE_JUEGO, :INSTRUMENTO_JUEGO, :CATEGORIA_JUEGO)";
+            VALUES (:ID_JUEGO, :ID_UNIVERSO, :NOMBRE_JUEGO, :INSTRUMENTO_JUEGO, :CATEGORIA_JUEGO)";
             $statement = $dbConn->prepare($sql);
             bindAllValues($statement, $input);
             $statement->execute();
@@ -76,10 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         echo "EL campo ID_JUEGO es obligatorio para insertar";
     }
-
 }
 
-//BORRA EL ELEMENTO SEGUN EL ID
+//==========================================================================BORRA EL ELEMENTO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if (isset($_GET['ID_JUEGO'])) {
         $sql = $dbConn->prepare("SELECT COUNT(*) FROM juego where ID_JUEGO=:ID_JUEGO ");
@@ -106,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 }
 
-//Actualizar
+//=======================================================================ACTUALIZA LOS DATOS DE UN REGISTRO
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_JUEGO'])) {
         $sql = $dbConn->prepare("SELECT * FROM juego where ID_JUEGO=:ID_JUEGO");

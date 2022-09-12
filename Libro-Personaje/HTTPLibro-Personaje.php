@@ -8,24 +8,32 @@ $dbConn = connect($db);
 REALIZA BUSQUEDA ESPECIFICA
  */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //VALIDA LA BUSQUEDA
-    if (isset($_GET['ID_LIBRO']) && isset($_GET['ID_PERSONAJE'])) {
-        $sql = $dbConn->prepare("SELECT * FROM libro_personaje WHERE ID_LIBRO=:ID_LIBRO AND ID_PERSONAJE=:ID_PERSONAJE");
-        $sql->bindValue(':ID_LIBRO', $_GET['ID_LIBRO']);
-        $sql->bindValue(':ID_PERSONAJE', $_GET['ID_PERSONAJE']);
+    //=================================================================VALIDA LA BUSQUEDA MEDIANTE EL NOMBRE DEL PERSONAJE Y NOS MOSTRARA EN QUE LIBROS PARTICIPA
+    if (isset($_GET['NOMBRE_PERSONAJE'])) {
+        $sql = $dbConn->prepare("SELECT * FROM `libro_personajes`
+        RIGHT JOIN personaje ON libro_personajes.ID_PERSONAJE=personaje.ID_PERSONAJE
+        LEFT JOIN libros ON libro_personajes.ID_LIBRO=libros.ID_LIBRO
+        LEFT JOIN casa ON casa.ID_CASA=personaje.ID_CASA
+        WHERE personaje.NOMBRE_PERSONAJE LIKE '%' :NOMBRE_PERSONAJE '%'");
+        $sql->bindValue(':NOMBRE_PERSONAJE', $_GET['NOMBRE_PERSONAJE']);
         $sql->execute();
         $row_count = $sql->fetchColumn();
         //VALIDA SI SE ENCUENTRAN O NO LOS DATOS
         if ($row_count == 0) {
             header("HTTP/1.1 204 No Content");
-            echo "No existe la consulta con id =  ", $_GET['ID_PERSONAJE'];
+            echo "No existe la consulta con id =  ", $_GET['NOMBRE_PERSONAJE'];
 
         } else {
             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
 
-            $sql = $dbConn->prepare("SELECT personaje.APELLIDO_PERSONAJE, personaje.NOMBRE_PERSONAJE, personaje.FECHA_NACIMIENTO_PERSONAJE, personaje.PAPEL_PERSONAJE, libros.CRONOLOGIA_LIBRO, libros.TITULO_LIBRO, libros.SINOPSIS_LIBRO, libros.ANO_PUBLICACION_LIBRO FROM libro_personajes INNER JOIN libros ON libro_personajes.ID_LIBRO = libros.ID_LIBRO INNER JOIN personaje ON libro_personajes.ID_PERSONAJE= personaje.ID_PERSONAJE");
-            $sql->bindValue(':ID_PERSONAJE', $_GET['ID_PERSONAJE']);
-            $sql->bindValue(':ID_LIBRO', $_GET['ID_LIBRO']);
+            $sql = $dbConn->prepare("SELECT personaje.NOMBRE_PERSONAJE, personaje.APELLIDO_PERSONAJE, personaje.PAPEL_PERSONAJE, libros.TITULO_LIBRO, libros.CRONOLOGIA_LIBRO , libros.SINOPSIS_LIBRO, libros.ANO_PUBLICACION_LIBRO 
+            FROM `libro_personajes`
+            RIGHT JOIN personaje ON libro_personajes.ID_PERSONAJE=personaje.ID_PERSONAJE
+            LEFT JOIN libros ON libro_personajes.ID_LIBRO=libros.ID_LIBRO
+            LEFT JOIN casa ON casa.ID_CASA=personaje.ID_CASA
+            WHERE personaje.NOMBRE_PERSONAJE LIKE '%' :NOMBRE_PERSONAJE '%'
+            ORDER BY libros.CRONOLOGIA_LIBRO");
+            $sql->bindValue(':NOMBRE_PERSONAJE', $_GET['NOMBRE_PERSONAJE']);
             $sql->execute();
             header("HTTP/1.1 200 OK");
             echo json_encode($sql->fetch(PDO::FETCH_ASSOC));
@@ -34,18 +42,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
     } else {
-        //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
-        $sql = $dbConn->prepare("SELECT personaje.APELLIDO_PERSONAJE, personaje.NOMBRE_PERSONAJE, personaje.FECHA_NACIMIENTO_PERSONAJE, personaje.PAPEL_PERSONAJE, libros.CRONOLOGIA_LIBRO, libros.TITULO_LIBRO, libros.SINOPSIS_LIBRO, libros.ANO_PUBLICACION_LIBRO FROM personaje INNER JOIN libro_personajes ON libro_personajes.ID_PERSONAJE= personaje.ID_PERSONAJE INNER JOIN libros ON libro_personajes.ID_LIBRO = libros.ID_LIBRO");
-        $sql->execute();
-        $sql->setFetchMode(PDO::FETCH_ASSOC);
-        header("HTTP/1.1 200 OK");
-        echo json_encode($sql->fetchAll());
-        exit();
+        //===============================================================BUSUQEDA MEDIANTE EL NOMNBRE DEL LIBRO PARA SABER LOS PERSONAJES QUE APARECEN EN EL LIBRO
+        if (isset($_GET['TITULO_LIBRO'])) {
+            $sql = $dbConn->prepare("SELECT libros.CRONOLOGIA_LIBRO AS 'CRONOLOGIA', libros.TITULO_LIBRO AS 'TITULO', personaje.NOMBRE_PERSONAJE AS 'NOMBRE', personaje.APELLIDO_PERSONAJE AS 'APELLIDO',  personaje.PAPEL_PERSONAJE AS 'PAPEL'
+            FROM `libro_personajes`
+            RIGHT JOIN personaje ON libro_personajes.ID_PERSONAJE=personaje.ID_PERSONAJE
+            LEFT JOIN libros ON libro_personajes.ID_LIBRO=libros.ID_LIBRO
+            LEFT JOIN casa ON casa.ID_CASA=personaje.ID_CASA
+            WHERE libros.TITULO_LIBRO LIKE '%' :TITULO_LIBRO '%'");
+            $sql->bindValue(':TITULO_LIBRO', $_GET['TITULO_LIBRO']);
+            $sql->execute();
+            $row_count = $sql->fetchColumn();
+            //VALIDA SI SE ENCUENTRAN O NO LOS DATOS
+            if ($row_count == 0) {
+                header("HTTP/1.1 204 No Content");
+                echo "No existe la consulta con id =  ", $_GET['TITULO_LIBRO'];
+    
+            } else {
+                //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
+                $sql = $dbConn->prepare("SELECT libros.CRONOLOGIA_LIBRO AS 'CRONOLOGIA', libros.TITULO_LIBRO AS 'TITULO', personaje.NOMBRE_PERSONAJE AS 'NOMBRE', personaje.APELLIDO_PERSONAJE AS 'APELLIDO',  personaje.PAPEL_PERSONAJE AS 'PAPEL'
+                FROM `libro_personajes`
+                RIGHT JOIN personaje ON libro_personajes.ID_PERSONAJE=personaje.ID_PERSONAJE
+                LEFT JOIN libros ON libro_personajes.ID_LIBRO=libros.ID_LIBRO
+                LEFT JOIN casa ON casa.ID_CASA=personaje.ID_CASA
+                WHERE libros.TITULO_LIBRO LIKE '%' :TITULO_LIBRO '%'
+                ORDER BY libros.CRONOLOGIA_LIBRO");
+                $sql->bindValue(':TITULO_LIBRO', $_GET['TITULO_LIBRO']);
+                $sql->execute();
+                header("HTTP/1.1 200 OK");
+                echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
+                echo "Si existe el registro  ";
+                exit();
+            }
+    
+        } else {
+            //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
+            $sql = $dbConn->prepare("SELECT * FROM libro_personajes");
+            $sql->execute();
+            $sql->setFetchMode(PDO::FETCH_ASSOC);
+            header("HTTP/1.1 200 OK");
+            echo json_encode($sql->fetchAll());
+            exit();
+        }
     }
-
 }
 
-// CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+// =======================================================================================CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_LIBRO']) && isset($_POST['ID_PERSONAJE'])) {
         $sql = $dbConn->prepare("SELECT * FROM libro_personajes WHERE ID_LIBRO=:ID_LIBRO AND ID_PERSONAJE=:ID_PERSONAJE");
@@ -66,7 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $statement->execute();
             $postId = $dbConn->lastInsertId();
             echo "Guardado Exitosamente";
-
             if ($postId) {
                 $input['ID_PERSONAJE'] = $postId;
                 header("HTTP/1.1 200 OK");
@@ -77,10 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         echo "EL campo ID_PERSONAJE y ID_LIBRO son obligatorio para insertar";
     }
-
 }
 
-//BORRA EL ELEMENTO SEGUN EL ID
+//==================================================================================================BORRA EL ELEMENTO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if (isset($_GET['ID_PERSONAJE']) && isset($_GET['ID_PERSONAJE'])) {
         $sql = $dbConn->prepare("SELECT COUNT(*) FROM libro_personajes where ID_PERSONAJE=:ID_PERSONAJE AND ID_LIBRO = :ID_LIBRO");
@@ -110,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 }
 
-//Actualizar
+//===========================================================================ACTUALIZA LA RELACI[ON QUE EXISTE ENTRE PERSONAJE Y LIBRO
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_PERSONAJE']) && isset($_GET['ID_LIBRO'])) {
         $sql = $dbConn->prepare("SELECT * FROM libro_personaje where ID_PERSONAJE=:ID_PERSONAJE AND ID_LIBRO=:ID_LIBRO");

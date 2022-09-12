@@ -30,9 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
             exit();
         }
-
     } else {
-        //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
+        //LISTA TODOS LOS HECHIZOS REGISTRADOS
         $sql = $dbConn->prepare("SELECT * FROM hechizo");
         $sql->execute();
         $sql->setFetchMode(PDO::FETCH_ASSOC);
@@ -43,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 }
 
-// CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+//=================================================================METODO PARA GENERAR UN NUEVO REGISTRO EN LA BASE DE DATOS 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_HECHIZO'])) {
         $sql = $dbConn->prepare("SELECT * FROM hechizo where ID_HECHIZO=:ID_HECHIZO");
@@ -76,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 }
 
-//BORRA EL ELEMENTO SEGUN EL ID
+//===========================================================================BORRA EL ELEMENTO SEGUN EL ID DEL REGISTRO 
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if (isset($_GET['ID_HECHIZO'])) {
         $sql = $dbConn->prepare("SELECT COUNT(*) FROM hechizo where ID_HECHIZO=:ID_HECHIZO");
@@ -103,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 }
 
-//MODIFICA EL AL HECHIZO SEGUN EL ID
+//===============================================================================MODIFICA EL AL HECHIZO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_HECHIZO'])) {
         $sql = $dbConn->prepare("SELECT * FROM hechizo where ID_HECHIZO=:ID_HECHIZO");

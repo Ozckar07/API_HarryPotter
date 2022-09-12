@@ -5,7 +5,7 @@ include "../utils.php";
 $dbConn = connect($db);
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //VALIDA LA BUSQUEDA
+    //====================================================================================================BUSCA EL MEDIO DE TRABASPORTE SEGUN SU NOMBRE
     if (isset($_GET['NOMBRE_TRANSPORTE'])) {
         $sql = $dbConn->prepare("SELECT * FROM `transporte` 
         WHERE transporte.NOMBRE_TRANSPORTE LIKE '%' :NOMBRE_TRANSPORTE '%'");
@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
             exit();
         }
-
     } else {
         //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
         $sql = $dbConn->prepare("SELECT * FROM transporte");
@@ -42,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 }
 
-// CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+// ==============================================================================================CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_TRANSPORTE'])) {
         $sql = $dbConn->prepare("SELECT * FROM transporte where ID_TRANSPORTE=:ID_TRANSPORTE");
@@ -72,10 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         echo "EL campo ID_TRANSPORTE es obligatorio para insertar";
     }
-
 }
 
-//BORRA EL ELEMENTO SEGUN EL ID
+//==================================================================================BORRA EL ELEMENTO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if (isset($_GET['ID_TRANSPORTE'])) {
         $sql = $dbConn->prepare("SELECT COUNT(*) FROM transporte where ID_TRANSPORTE=:ID_TRANSPORTE");
@@ -102,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 }
 
-//Actualizar
+//==================================================================MODIFICA LOS REGISTRO DE LA TABLA TRANSPORTE
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_TRANSPORTE'])) {
         $sql = $dbConn->prepare("SELECT * FROM transporte where ID_TRANSPORTE=:ID_TRANSPORTE");
@@ -133,6 +131,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         echo "El parametro ID_TRANSPORTE es obligatorio para poder actualizar";
     }
 }
-
 //En caso de que ninguna de las opciones anteriores se haya ejecutado
 header("HTTP/1.1 400 Bad Request");

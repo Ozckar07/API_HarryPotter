@@ -4,11 +4,8 @@ include "../utils.php";
 
 $dbConn = connect($db);
 
-/*
-REALIZA BUSQUEDA ESPECIFICA DE UN OBJETO DE LA BASE
- */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //VALIDA LA BUSQUEDA
+    //====================================================================================BUSQUEDA MEDIANTE EL NOMBRE DE LA ESCUELA
     if (isset($_GET['NOMBRE_ESCUELA'])) {
         $sql = $dbConn->prepare("SELECT * FROM `escuela` 
         WHERE escuela.NOMBRE_ESCUELA LIKE '%' :NOMBRE_ESCUELA '%'
@@ -20,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($row_count == 0) {
             header("HTTP/1.1 204 No Content");
             echo "No existe el registro de la escuela con id =  ", $_GET['NOMBRE_ESCUELA'];
-
         } else {
             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
             echo "Si existe el registro  ";
@@ -33,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
             exit();
         }
-
     } else {
         //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
         $sql = $dbConn->prepare("SELECT * FROM escuela");
@@ -46,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 }
 
-// CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+//=============================================================================================METODO PARA REAR UN NUEVO REGISTRO DE ESCUELA
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_ESCUELA'])) {
         $sql = $dbConn->prepare("SELECT * FROM escuela where ID_ESCUELA=:ID_ESCUELA");
@@ -77,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 }
 
-//BORRA EL ELEMENTO SEGUN EL ID
+//====================================================================================================BORRA EL ELEMENTO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if (isset($_GET['ID_ESCUELA'])) {
         $sql = $dbConn->prepare("SELECT COUNT(*) FROM escuela where ID_ESCUELA=:ID_ESCUELA");

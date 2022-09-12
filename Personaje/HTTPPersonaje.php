@@ -59,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($row_count == 0) {
                 header("HTTP/1.1 204 No Content");
                 echo "No existe el registro de la personaje con id = ", $_GET['APELLIDO_PERSONAJE'];
-    
             } else {
                 //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
                 echo "Si existe el registro  ";
@@ -78,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
                 exit();
             }
-    
         } else {
             //MUESTRA TODOS LOS ELEMENTOS DE LA TABLA 
             $sql = $dbConn->prepare("SELECT * FROM personaje");
@@ -91,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 }
 
-// CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+// ==================================================================================================CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_PERSONAJE'])) {
         $sql = $dbConn->prepare("SELECT * FROM personaje where ID_PERSONAJE=:ID_PERSONAJE");
@@ -123,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 }
 
-//BORRA EL ELEMENTO SEGUN EL ID
+//======================================================================BORRA EL ELEMENTO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if (isset($_GET['ID_PERSONAJE'])) {
         $sql = $dbConn->prepare("SELECT COUNT(*) FROM personaje where ID_PERSONAJE=:ID_PERSONAJE");
@@ -150,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 }
 
-//Actualizar
+//=================================================================================ACTUALIZA LOS REGISTROS DE LA TABLA PERSONAJES
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_PERSONAJE'])) {
         $sql = $dbConn->prepare("SELECT * FROM personaje where ID_PERSONAJE=:ID_PERSONAJE");
@@ -161,14 +159,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             $input = $_GET;
             $postId = $input['ID_PERSONAJE'];
             $fields = getParams($input);
-
-            $sql = "UPDATE personaje
-            SET $fields
-            WHERE ID_PERSONAJE='$postId'";
-
+            $sql = "UPDATE personaje SET $fields WHERE ID_PERSONAJE='$postId'";
             $statement = $dbConn->prepare($sql);
             bindAllValues($statement, $input);
-
             $statement->execute();
             header("HTTP/1.1 200 OK");
             echo "Actualizada exitosamente la personaje ", $_GET['ID_PERSONAJE'];

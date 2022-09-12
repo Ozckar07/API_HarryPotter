@@ -4,11 +4,8 @@ include "../utils.php";
 
 $dbConn = connect($db);
 
-/*
-REALIZA BUSQUEDA ESPECIFICA
- */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //VALIDA LA BUSQUEDA
+    //=======================================================================================BUSQUEDA SEGUN EL MATERIAL DE LA MONEDA
     if (isset($_GET['MATERIAL_MONEDA'])) {
         $sql = $dbConn->prepare("SELECT * FROM `moneda` 
         WHERE moneda.MATERIAL_MONEDA LIKE '%' :MATERIAL_MONEDA '%'");
@@ -33,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
     } else {
+        //=====================================================================================BUSCA A TRAVES DEL NOMBRE DE LA MONEDA
         if (isset($_GET['NOMBRE_MONEDA'])) {
             $sql = $dbConn->prepare("SELECT * FROM `moneda` 
             WHERE moneda.NOMBRE_MONEDA LIKE '%' :NOMBRE_MONEDA '%'");
@@ -57,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
     
         } else {
-            //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
+            //MUESTRA TODOS LOS REGISTROS QUE EXISTEN EN LA TABLA MONEDA
             $sql = $dbConn->prepare("SELECT * FROM moneda");
             $sql->execute();
             $sql->setFetchMode(PDO::FETCH_ASSOC);
@@ -69,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 }
 
-// CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+//======================================================================= CREA UN NUEVO REGISTRO DE MONEDA EN LA BASE DE DATOS
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_MONEDA'])) {
         $sql = $dbConn->prepare("SELECT * FROM moneda where ID_MONEDA=:ID_MONEDA");
@@ -102,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 }
 
-//BORRA EL ELEMENTO SEGUN EL ID
+//===========================================================================================BORRA EL ELEMENTO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if (isset($_GET['ID_MONEDA'])) {
         $sql = $dbConn->prepare("SELECT COUNT(*) FROM moneda where ID_MONEDA=:ID_MONEDA");
@@ -129,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 }
 
-//Actualizar
+//===================================================================MODIFICA Y ACTUALIZA LOS REGISTRO EN LA BASE DE DATOS 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_MONEDA'])) {
         $sql = $dbConn->prepare("SELECT * FROM moneda where ID_MONEDA=:ID_MONEDA");
@@ -160,6 +158,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         echo "El parametro ID_MONEDA es obligatorio para poder actualizar";
     }
 }
-
 //En caso de que ninguna de las opciones anteriores se haya ejecutado
 header("HTTP/1.1 400 Bad Request");
