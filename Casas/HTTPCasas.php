@@ -4,11 +4,8 @@ include "../utils.php";
 
 $dbConn = connect($db);
 
-/*
-REALIZA BUSQUEDA ESPECIFICA DE LA CASA
- */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //VALIDA LA BUSQUEDA
+    //=============================================================BUSQUEDA MEDIANTE EL NOMBRE DE LA CASA
     if (isset($_GET['NOMBRE_CASA'])) {
         $sql = $dbConn->prepare("SELECT * FROM `casa` RIGHT JOIN escuela ON escuela.ID_ESCUELA=casa.ID_ESCUELA WHERE NOMBRE_CASA LIKE '%' :NOMBRE_CASA '%'");
         $sql->bindValue(':NOMBRE_CASA', $_GET['NOMBRE_CASA']);
@@ -22,14 +19,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
             echo "Si existe el registro  ";
-            $sql = $dbConn->prepare("SELECT casa.NOMBRE_CASA AS 'CASA: ', casa.COLOR_CASA AS 'EMBLEMAS', casa.VIRTUD_CASA AS 'VIRTUDES', casa.NOMBRE_FANTASMA_CASA AS 'FANTAS O GUARDIAN', escuela.NOMBRE_ESCUELA AS 'ESCUELA' FROM `casa` RIGHT JOIN escuela ON escuela.ID_ESCUELA=casa.ID_ESCUELA WHERE NOMBRE_CASA LIKE '%' :NOMBRE_CASA '%' ORDER BY escuela.NOMBRE_ESCUELA");
+            $sql = $dbConn->prepare("SELECT casa.NOMBRE_CASA AS 'CASA: ', casa.COLOR_CASA AS 'EMBLEMAS', casa.VIRTUD_CASA AS 'VIRTUDES', casa.NOMBRE_FANTASMA_CASA AS 'FANTAS O GUARDIAN', escuela.NOMBRE_ESCUELA AS 'ESCUELA' 
+            FROM `casa` 
+            RIGHT JOIN escuela ON escuela.ID_ESCUELA=casa.ID_ESCUELA 
+            WHERE NOMBRE_CASA LIKE '%' :NOMBRE_CASA '%' 
+            ORDER BY escuela.NOMBRE_ESCUELA");
             $sql->bindValue(':NOMBRE_CASA', $_GET['NOMBRE_CASA']);
             $sql->execute();
             header("HTTP/1.1 200 OK");
             echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
             exit();
         }
-
     } else {
         //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
         $sql = $dbConn->prepare("SELECT * FROM casa");
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 }
 
-// CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+//========================================================= METODO PARA INSERTAR UN NUEVO REGISTRO
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_CASA'])) {
         $sql = $dbConn->prepare("SELECT * FROM casa where ID_CASA=:ID_CASA");
@@ -56,8 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "Guardado Exitosamente";
             $input = $_POST;
             $sql = "INSERT INTO casa (ID_ESCUELA, ID_CASA, NOMBRE_CASA, COLOR_CASA, VIRTUD_CASA, NOMBRE_FANTASMA_CASA)
-            VALUES
-           (:ID_ESCUELA, :ID_CASA, :NOMBRE_CASA, :COLOR_CASA, :VIRTUD_CASA, :NOMBRE_FANTASMA_CASA)";
+            VALUES (:ID_ESCUELA, :ID_CASA, :NOMBRE_CASA, :COLOR_CASA, :VIRTUD_CASA, :NOMBRE_FANTASMA_CASA)";
             $statement = $dbConn->prepare($sql);
             bindAllValues($statement, $input);
             $statement->execute();
@@ -74,8 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 }
-
-//BORRA EL ELEMENTO SEGUN EL ID
+//=========================================================================BORRAR ELEMENTOS SEGUN EL ID_CASA
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if (isset($_GET['ID_CASA'])) {
         $sql = $dbConn->prepare("SELECT COUNT(*) FROM casa where ID_CASA=:ID_CASA");
@@ -85,11 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         // echo $row_count;
         if ($row_count == 0) {
             echo "No existe el registro ", $_GET['ID_CASA'];
-            header("HTTP/1.1 400 Bad Request"); //error 400 por no ejecutar el delete
-
+            header("HTTP/1.1 400 Bad Request"); //error 400 al no encontrar coincidencias
         } else {
+            //==================================Al encontrar el elemento que coincide, lo elimina
             $ID_CASA = $_GET['ID_CASA'];
-            $ID_ESCUELA = $_GET['ID_ESCUELA'];
             $statement = $dbConn->prepare("DELETE FROM casa where ID_CASA=:ID_CASA");
             $statement->bindValue(':ID_CASA', $ID_CASA);
             $statement->execute();
@@ -103,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 }
 
-//Actualizar
+//===================================================================METODO PARA LA MODIFICIACION DE UN REGISTRO
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_CASA'])) {
         $sql = $dbConn->prepare("SELECT * FROM casa where ID_CASA=:ID_CASA");
@@ -124,11 +121,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
 
             $statement->execute();
             header("HTTP/1.1 200 OK");
-            echo "Actualizada exitosamente la casa ", $_GET['ID_CASA'];
+            echo "Actualizada exitosamente la casa= ", $_GET['ID_CASA'];
             exit();
         } else {
             header("HTTP/1.1 204 No Content");
-            echo "No existe la ID_CASA ", $_GET['ID_CASA'];
+            echo "No existe la ID_CASA= ", $_GET['ID_CASA'];
         }
     } else {
         echo "El parametro ID_CASA es obligatorio para poder actualizar";
