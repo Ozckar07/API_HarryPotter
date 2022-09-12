@@ -92,9 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 RIGHT JOIN casa ON casa.ID_CASA=personaje.ID_CASA
                 RIGHT JOIN escuela ON escuela.ID_ESCUELA=casa.ID_ESCUELA
                 LEFT JOIN universomagico ON universomagico.ID_UNIVERSO=personaje.ID_UNIVERSO
-                WHERE casa.NOMBRE_CASA LIKE '%' :NOMBRE_CASA '%'
-                GROUP BY casa.NOMBRE_CASA
-                ORDER BY escuela.NOMBRE_ESCUELA");
+                WHERE casa.NOMBRE_CASA LIKE '%' :NOMBRE_CASA '%'");
                 $sql->bindValue(':NOMBRE_CASA', $_GET['NOMBRE_CASA']);
                 $sql->execute();
                 $row_count = $sql->fetchColumn();

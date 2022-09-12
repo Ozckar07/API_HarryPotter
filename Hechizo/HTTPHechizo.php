@@ -4,11 +4,8 @@ include "../utils.php";
 
 $dbConn = connect($db);
 
-/*
-REALIZA BUSQUEDA ESPECIFICA
- */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //VALIDA LA BUSQUEDA
+    //==============================================================REALIZA LA BUSQUEDA MEDIENTE EL EFECTO DEL HECHIZO
     if (isset($_GET['EFECTO_HECHIZO'])) {
         $sql = $dbConn->prepare("SELECT * FROM `hechizo` 
         WHERE hechizo.EFECTO_HECHIZO LIKE '%' :EFECTO_HECHIZO '%'
@@ -106,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 }
 
-//Actualizar
+//MODIFICA EL AL HECHIZO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_HECHIZO'])) {
         $sql = $dbConn->prepare("SELECT * FROM hechizo where ID_HECHIZO=:ID_HECHIZO");

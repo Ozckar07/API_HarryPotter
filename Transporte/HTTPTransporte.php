@@ -4,29 +4,30 @@ include "../utils.php";
 
 $dbConn = connect($db);
 
-/*
-REALIZA BUSQUEDA ESPECIFICA DE LA CASA
- */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     //VALIDA LA BUSQUEDA
-    if (isset($_GET['ID_TRANSPORTE'])) {
-        $sql = $dbConn->prepare("SELECT * FROM transporte where ID_TRANSPORTE=:ID_TRANSPORTE");
-        $sql->bindValue(':ID_TRANSPORTE', $_GET['ID_TRANSPORTE']);
+    if (isset($_GET['NOMBRE_TRANSPORTE'])) {
+        $sql = $dbConn->prepare("SELECT * FROM `transporte` 
+        WHERE transporte.NOMBRE_TRANSPORTE LIKE '%' :NOMBRE_TRANSPORTE '%'");
+        $sql->bindValue(':NOMBRE_TRANSPORTE', $_GET['NOMBRE_TRANSPORTE']);
         $sql->execute();
         $row_count = $sql->fetchColumn();
         //VALIDA SI SE ENCUENTRAN O NO LOS DATOS
         if ($row_count == 0) {
             header("HTTP/1.1 204 No Content");
-            echo "No existe el registro de la transporte con id = ", $_GET['ID_TRANSPORTE'];
+            echo "No existe el registro de la transporte con id = ", $_GET['NOMBRE_TRANSPORTE'];
 
         } else {
             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
             echo "Si existe el registro  ";
-            $sql = $dbConn->prepare("SELECT * FROM transporte where ID_TRANSPORTE=:ID_TRANSPORTE");
-            $sql->bindValue(':ID_TRANSPORTE', $_GET['ID_TRANSPORTE']);
+            $sql = $dbConn->prepare("SELECT transporte.NOMBRE_TRANSPORTE AS 'NOMBRE', transporte.DESCRIPCION_TRANSPORTE AS 'DESCRIPCIÓN', transporte.MEDIO_TRANSPORTE AS 'MEDIO'  
+            FROM `transporte` 
+            WHERE transporte.NOMBRE_TRANSPORTE LIKE '%' :NOMBRE_TRANSPORTE '%'
+            ORDER BY transporte.NOMBRE_TRANSPORTE");
+            $sql->bindValue(':NOMBRE_TRANSPORTE', $_GET['NOMBRE_TRANSPORTE']);
             $sql->execute();
             header("HTTP/1.1 200 OK");
-            echo json_encode($sql->fetch(PDO::FETCH_ASSOC));
+            echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
             exit();
         }
 
@@ -39,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo json_encode($sql->fetchAll());
         exit();
     }
-
 }
 
 // CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
