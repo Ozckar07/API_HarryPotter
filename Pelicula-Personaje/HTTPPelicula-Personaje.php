@@ -35,7 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             RIGHT JOIN escuela ON escuela.ID_ESCUELA=casa.ID_ESCUELA 
             WHERE personaje.APELLIDO_PERSONAJE 
             LIKE '%' :APELLIDO_PERSONAJE '%'
-            GROUP BY personaje.NOMBRE_PERSONAJE");
+            GROUP BY personaje.NOMBRE_PERSONAJE
+            ORDER BY personaje.FECHA_NACIMIENTO_PERSONAJE");
             $sql->bindValue(':APELLIDO_PERSONAJE', $_GET['APELLIDO_PERSONAJE']);
             $sql->execute();
             header("HTTP/1.1 200 OK");
