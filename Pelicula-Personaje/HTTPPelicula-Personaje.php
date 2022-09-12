@@ -4,9 +4,6 @@ include "../utils.php";
 
 $dbConn = connect($db);
 
-/*
-REALIZA BUSQUEDA ESPECIFICA
- */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     //===================================================BUSQUEDA MEDIANTE EL APELLIDO DEL PERSONAJE
     if (isset($_GET['APELLIDO_PERSONAJE'])) {
@@ -26,7 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo "No existe la consulta con id =  ", $_GET['APELLIDO_PERSONAJE'];
         } else {
             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
-            $sql = $dbConn->prepare("SELECT personaje.NOMBRE_PERSONAJE AS 'PERSONAJE: ', personaje.APELLIDO_PERSONAJE AS 'APELLIDO: ', personaje.FOTO_PERSONAJE AS 'LINK FOTO', casa.NOMBRE_CASA AS 'CASA: ', escuela.NOMBRE_ESCUELA AS 'COLEGIO: ', libros.AUTOR_LIBRO AS 'CREADORA: ' 
+            $sql = $dbConn->prepare("SELECT personaje.NOMBRE_PERSONAJE AS 'PERSONAJE: ',
+            personaje.APELLIDO_PERSONAJE AS 'APELLIDO: ',
+            personaje.FOTO_PERSONAJE AS 'LINK FOTO',
+            casa.NOMBRE_CASA AS 'CASA: ',
+            escuela.NOMBRE_ESCUELA AS 'COLEGIO: ',
+            libros.AUTOR_LIBRO AS 'CREADORA: ' 
             FROM `pelicula_personaje` RIGHT JOIN pelicula ON pelicula_personaje.ID_PELICULA=pelicula.ID_PELICULA 
             LEFT JOIN personaje ON pelicula_personaje.ID_PERSONAJE=personaje.ID_PERSONAJE 
             LEFT JOIN libro_personajes ON personaje.ID_PERSONAJE=libro_personajes.ID_PERSONAJE 
@@ -64,7 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo "No existe la consulta con id =  ", $_GET['RAZA_PERSONAJE'];
             } else {
                 //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
-                $sql = $dbConn->prepare("SELECT  personaje.NOMBRE_PERSONAJE AS 'PERSONAJE: ',personaje.APELLIDO_PERSONAJE AS 'APELLIDO: ', casa.NOMBRE_CASA AS 'CASA: ', personaje.RAZA_PERSONAJE AS 'SANGRE', escuela.NOMBRE_ESCUELA AS 'COLEGIO: ', libros.AUTOR_LIBRO AS 'CREADORA:' FROM `pelicula_personaje`
+                $sql = $dbConn->prepare("SELECT  personaje.NOMBRE_PERSONAJE AS 'PERSONAJE: ',
+                personaje.APELLIDO_PERSONAJE AS 'APELLIDO: ', casa.NOMBRE_CASA AS 'CASA: ',
+                personaje.RAZA_PERSONAJE AS 'SANGRE',
+                escuela.NOMBRE_ESCUELA AS 'COLEGIO: ',
+                libros.AUTOR_LIBRO AS 'CREADORA:' 
+                FROM `pelicula_personaje`
                 RIGHT JOIN pelicula ON pelicula_personaje.ID_PELICULA=pelicula.ID_PELICULA
                 LEFT JOIN personaje ON pelicula_personaje.ID_PERSONAJE=personaje.ID_PERSONAJE
                 LEFT JOIN libro_personajes ON personaje.ID_PERSONAJE=libro_personajes.ID_PERSONAJE
@@ -102,7 +109,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     echo "No existe la casa =  ", $_GET['NOMBRE_CASA'];
                 } else {
                     //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
-                    $sql = $dbConn->prepare("SELECT  casa.NOMBRE_CASA AS 'CASA: ', escuela.NOMBRE_ESCUELA AS 'COLEGIO: ', casa.VIRTUD_CASA AS 'VIRTUDES', casa.COLOR_CASA 'EMBLEMATICO: ', casa.NOMBRE_FANTASMA_CASA 'FANTASMA: ' FROM `pelicula_personaje`
+                    $sql = $dbConn->prepare("SELECT  casa.NOMBRE_CASA AS 'CASA: ',
+                    escuela.NOMBRE_ESCUELA AS 'COLEGIO: ',
+                    casa.VIRTUD_CASA AS 'VIRTUDES', casa.COLOR_CASA 'EMBLEMATICO: ',
+                    casa.NOMBRE_FANTASMA_CASA 'FANTASMA: ' 
+                    FROM `pelicula_personaje`
                     RIGHT JOIN pelicula ON pelicula_personaje.ID_PELICULA=pelicula.ID_PELICULA
                     LEFT JOIN personaje ON pelicula_personaje.ID_PERSONAJE=personaje.ID_PERSONAJE
                     LEFT JOIN libro_personajes ON personaje.ID_PERSONAJE=libro_personajes.ID_PERSONAJE
@@ -143,7 +154,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         echo "No existe la casa =  ", $_GET['TITULO_LIBRO'];
                     } else {
                         //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
-                        $sql = $dbConn->prepare("SELECT  libros.TITULO_LIBRO AS 'TITULO: ', libros.SINOPSIS_LIBRO AS 'SINÓPSIS: ', universomagico.NOMBRE_UNIVERSO AS 'UNIVERSO', libros.AUTOR_LIBRO AS 'AUTORA: ', libros.ANO_PUBLICACION_LIBRO AS 'AÑO DE PUBLICACIÓN', libros.EDITORIAL_LIBRO AS 'EDITORIAL'  FROM `pelicula_personaje`
+                        $sql = $dbConn->prepare("SELECT  libros.TITULO_LIBRO AS 'TITULO: ',
+                        libros.SINOPSIS_LIBRO AS 'SINÓPSIS: ',
+                        universomagico.NOMBRE_UNIVERSO AS 'UNIVERSO',
+                        libros.AUTOR_LIBRO AS 'AUTORA: ',
+                        libros.ANO_PUBLICACION_LIBRO AS 'AÑO DE PUBLICACIÓN',
+                        libros.EDITORIAL_LIBRO AS 'EDITORIAL'  
+                        FROM `pelicula_personaje`
                         RIGHT JOIN pelicula ON pelicula_personaje.ID_PELICULA=pelicula.ID_PELICULA
                         LEFT JOIN personaje ON pelicula_personaje.ID_PERSONAJE=personaje.ID_PERSONAJE
                         LEFT JOIN libro_personajes ON personaje.ID_PERSONAJE=libro_personajes.ID_PERSONAJE
@@ -183,7 +200,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             echo "No existe la casa =  ", $_GET['TITULO_PELICULA'];
                         } else {
                             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
-                            $sql = $dbConn->prepare("SELECT  pelicula.TITULO_PELICULA AS 'TITULO: ', pelicula.SINOPSIS_PELICULA AS 'RESUMEN', universomagico.NOMBRE_UNIVERSO, libros.AUTOR_LIBRO AS 'AUTORA', pelicula.ANO_ESTRENO_PELICULA AS 'AÑO DE ESTRENO', pelicula.PRODUCTORA_PELICULA AS 'PRODUCTORA', pelicula.DIRECTOR_PELICULA FROM `pelicula_personaje`
+                            $sql = $dbConn->prepare("SELECT  pelicula.TITULO_PELICULA AS 'TITULO: ',
+                            pelicula.SINOPSIS_PELICULA AS 'RESUMEN', universomagico.NOMBRE_UNIVERSO,
+                            libros.AUTOR_LIBRO AS 'AUTORA', pelicula.ANO_ESTRENO_PELICULA AS 'AÑO DE ESTRENO',
+                            pelicula.PRODUCTORA_PELICULA AS 'PRODUCTORA', pelicula.DIRECTOR_PELICULA 
+                            FROM `pelicula_personaje`
                             RIGHT JOIN pelicula ON pelicula_personaje.ID_PELICULA=pelicula.ID_PELICULA
                             LEFT JOIN personaje ON pelicula_personaje.ID_PERSONAJE=personaje.ID_PERSONAJE
                             LEFT JOIN libro_personajes ON personaje.ID_PERSONAJE=libro_personajes.ID_PERSONAJE

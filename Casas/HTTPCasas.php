@@ -7,7 +7,9 @@ $dbConn = connect($db);
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     //=============================================================BUSQUEDA MEDIANTE EL NOMBRE DE LA CASA
     if (isset($_GET['NOMBRE_CASA'])) {
-        $sql = $dbConn->prepare("SELECT * FROM `casa` RIGHT JOIN escuela ON escuela.ID_ESCUELA=casa.ID_ESCUELA WHERE NOMBRE_CASA LIKE '%' :NOMBRE_CASA '%'");
+        $sql = $dbConn->prepare("SELECT * FROM `casa` 
+        RIGHT JOIN escuela ON escuela.ID_ESCUELA=casa.ID_ESCUELA 
+        WHERE NOMBRE_CASA LIKE '%' :NOMBRE_CASA '%'");
         $sql->bindValue(':NOMBRE_CASA', $_GET['NOMBRE_CASA']);
         $sql->execute();
         $row_count = $sql->fetchColumn();
@@ -19,7 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
             echo "Si existe el registro  ";
-            $sql = $dbConn->prepare("SELECT casa.NOMBRE_CASA AS 'CASA: ', casa.COLOR_CASA AS 'EMBLEMAS', casa.VIRTUD_CASA AS 'VIRTUDES', casa.NOMBRE_FANTASMA_CASA AS 'FANTAS O GUARDIAN', escuela.NOMBRE_ESCUELA AS 'ESCUELA' 
+            $sql = $dbConn->prepare("SELECT casa.NOMBRE_CASA AS 'CASA: ', 
+            casa.COLOR_CASA AS 'EMBLEMAS', casa.VIRTUD_CASA AS 'VIRTUDES', 
+            casa.NOMBRE_FANTASMA_CASA AS 'FANTAS O GUARDIAN', 
+            escuela.NOMBRE_ESCUELA AS 'ESCUELA' 
             FROM `casa` 
             RIGHT JOIN escuela ON escuela.ID_ESCUELA=casa.ID_ESCUELA 
             WHERE NOMBRE_CASA LIKE '%' :NOMBRE_CASA '%' 

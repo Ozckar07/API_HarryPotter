@@ -1,6 +1,6 @@
 <?php
 
-//Abrir conexion a la base de datos
+//=====================================Abrir conexion a la base de datos
 function connect($db)
 {
     try {
@@ -15,7 +15,7 @@ function connect($db)
     }
 }
 
-//Obtener parametros para updates
+//====================================Obtener parametros para actualizar
 function getParams($input)
 {
     $filterParams = [];

@@ -4,11 +4,9 @@ include "../utils.php";
 
 $dbConn = connect($db);
 
-/*
-REALIZA BUSQUEDA ESPECIFICA DE UN OBJETO DE LA BASE
- */
+
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //===========================================================================================BUSQUEDA A TRAVEZ DEL ID DEL UNIVARSO
+    //======================================================BUSQUEDA A TRAVEZ DEL ID DEL UNIVARSO
     if (isset($_GET['ID_UNIVERSO'])) {
         $sql = $dbConn->prepare("SELECT * FROM universomagico WHERE ID_UNIVERSO=:ID_UNIVERSO");
         $sql->bindValue(':ID_UNIVERSO', $_GET['ID_UNIVERSO']);
@@ -29,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             exit();
         }
     } else {
-        //================================================================================================BUSQUEDA POR NOMBRE DEL JUEGO
+        //============================================================BUSQUEDA POR NOMBRE DEL JUEGO
         if (isset($_GET['NOMBRE_JUEGO'])) {
             $sql = $dbConn->prepare("SELECT * FROM `universomagico` 
             LEFT JOIN juego on juego.ID_UNIVERSO=universomagico.ID_UNIVERSO 
@@ -44,7 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             } else {
                 //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
                 echo "Si existe el registro  ";
-                $sql = $dbConn->prepare("SELECT juego.NOMBRE_JUEGO, juego.DESCRIPCION_JUEGO, juego.INSTRUMENTO_JUEGO, universomagico.TEMA_UNIVERSO
+                $sql = $dbConn->prepare("SELECT juego.NOMBRE_JUEGO, 
+                juego.DESCRIPCION_JUEGO, 
+                juego.INSTRUMENTO_JUEGO, 
+                universomagico.TEMA_UNIVERSO
                 FROM `universomagico` 
                 LEFT JOIN juego on juego.ID_UNIVERSO=universomagico.ID_UNIVERSO 
                 WHERE NOMBRE_JUEGO LIKE '%' :NOMBRE_JUEGO '%'");
@@ -55,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 exit();
             }
         } else {
-            //==========================================================================BUSQUEDA POR NOMBRE DE LA MONEDA
+            //===============================================BUSQUEDA POR NOMBRE DE LA MONEDA
             if (isset($_GET['NOMBRE_MONEDA'])) {
                 $sql = $dbConn->prepare("SELECT * FROM `universomagico`
                 LEFT JOIN moneda on moneda.ID_UNIVERSO=universomagico.ID_UNIVERSO WHERE NOMBRE_MONEDA 
@@ -70,7 +71,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 } else {
                     //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
                     echo "Si existe el registro  ";
-                    $sql = $dbConn->prepare("SELECT moneda.NOMBRE_MONEDA, moneda.CAMBIO_MONEDA, moneda.MATERIAL_MONEDA, universomagico.TEMA_UNIVERSO, universomagico.AUTOR_UNIVERSO 
+                    $sql = $dbConn->prepare("SELECT moneda.NOMBRE_MONEDA, 
+                    moneda.CAMBIO_MONEDA, 
+                    moneda.MATERIAL_MONEDA, 
+                    universomagico.TEMA_UNIVERSO, 
+                    universomagico.AUTOR_UNIVERSO 
                     FROM `universomagico` 
                     LEFT JOIN moneda on moneda.ID_UNIVERSO=universomagico.ID_UNIVERSO 
                     WHERE NOMBRE_MONEDA LIKE '%' :NOMBRE_MONEDA '%'");
@@ -81,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     exit();
                 }
             } else {
-                //=================================================================BUSQUEDA POR NOMBRE DEL MEDIO DE TRANSPORTE
+                //==========================================BUSQUEDA POR NOMBRE DEL MEDIO DE TRANSPORTE
                 if (isset($_GET['NOMBRE_TRANSPORTE'])) {
                     $sql = $dbConn->prepare("SELECT * FROM `universomagico` 
                     LEFT JOIN transporte on transporte.ID_UNIVERSO=universomagico.ID_UNIVERSO 
@@ -96,7 +101,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     } else {
                         //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
                         echo "Si existe el registro  ";
-                        $sql = $dbConn->prepare("SELECT transporte.NOMBRE_TRANSPORTE, transporte.DESCRIPCION_TRANSPORTE, transporte.MEDIO_TRANSPORTE, universomagico.TEMA_UNIVERSO, universomagico.AUTOR_UNIVERSO FROM `universomagico` LEFT JOIN transporte on transporte.ID_UNIVERSO=universomagico.ID_UNIVERSO WHERE NOMBRE_TRANSPORTE LIKE '%' :NOMBRE_TRANSPORTE '%'");
+                        $sql = $dbConn->prepare("SELECT transporte.NOMBRE_TRANSPORTE, 
+                        transporte.DESCRIPCION_TRANSPORTE, transporte.MEDIO_TRANSPORTE, 
+                        universomagico.TEMA_UNIVERSO, universomagico.AUTOR_UNIVERSO 
+                        FROM `universomagico` 
+                        LEFT JOIN transporte on transporte.ID_UNIVERSO=universomagico.ID_UNIVERSO 
+                        WHERE NOMBRE_TRANSPORTE LIKE '%' :NOMBRE_TRANSPORTE '%'");
                         $sql->bindValue(':NOMBRE_TRANSPORTE', $_GET['NOMBRE_TRANSPORTE']);
                         $sql->execute();
                         header("HTTP/1.1 200 OK");
@@ -104,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         exit();
                     }
                 } else {
-                    //=========================================================================BUSQUEDA POR EFECTO DEL HECHIZO
+                    //=================================================BUSQUEDA POR EFECTO DEL HECHIZO
                     if (isset($_GET['EFECTO_HECHIZO'])) {
                         $sql = $dbConn->prepare("SELECT * FROM `universomagico` 
                         LEFT JOIN hechizo on hechizo.ID_UNIVERSO=universomagico.ID_UNIVERSO 
@@ -120,7 +130,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         } else {
                             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
                             echo "Si existe el registro  ";
-                            $sql = $dbConn->prepare("SELECT hechizo.NOMBRE_HECHIZO, hechizo.EFECTO_HECHIZO, hechizo.DURACION_HECHIZO, universomagico.TEMA_UNIVERSO, universomagico.AUTOR_UNIVERSO 
+                            $sql = $dbConn->prepare("SELECT hechizo.NOMBRE_HECHIZO, 
+                            hechizo.EFECTO_HECHIZO, 
+                            hechizo.DURACION_HECHIZO, 
+                            universomagico.TEMA_UNIVERSO, 
+                            universomagico.AUTOR_UNIVERSO 
                             FROM `universomagico` 
                             LEFT JOIN hechizo on hechizo.ID_UNIVERSO=universomagico.ID_UNIVERSO 
                             WHERE EFECTO_HECHIZO LIKE '%' :EFECTO_HECHIZO '%'");
@@ -201,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         echo "El parametro ID_UNIVERSO es obligatorio para poder eliminar";
     }
 }
-//=================================================================================ACTUALIZAR VALIDANDO EL ID DEL UNIVERSO
+//==========================================================ACTUALIZAR VALIDANDO EL ID DEL UNIVERSO
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_UNIVERSO'])) {
         $sql = $dbConn->prepare("SELECT * FROM universomagico where ID_UNIVERSO=:ID_UNIVERSO ");
