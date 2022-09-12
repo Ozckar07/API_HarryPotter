@@ -9,24 +9,28 @@ REALIZA BUSQUEDA ESPECIFICA
  */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     //VALIDA LA BUSQUEDA
-    if (isset($_GET['ID_HECHIZO'])) {
-        $sql = $dbConn->prepare("SELECT * FROM hechizo where ID_HECHIZO=:ID_HECHIZO");
-        $sql->bindValue(':ID_HECHIZO', $_GET['ID_HECHIZO']);
+    if (isset($_GET['EFECTO_HECHIZO'])) {
+        $sql = $dbConn->prepare("SELECT * FROM `hechizo` 
+        WHERE hechizo.EFECTO_HECHIZO LIKE '%' :EFECTO_HECHIZO '%'
+        ORDER BY hechizo.NOMBRE_HECHIZO");
+        $sql->bindValue(':EFECTO_HECHIZO', $_GET['EFECTO_HECHIZO']);
         $sql->execute();
         $row_count = $sql->fetchColumn();
         //VALIDA SI SE ENCUENTRAN O NO LOS DATOS
         if ($row_count == 0) {
             header("HTTP/1.1 204 No Content");
-            echo "No existe el registro de la hechizo con id = ", $_GET['ID_HECHIZO'];
+            echo "No existe el registro de la hechizo con efecto = ", $_GET['EFECTO_HECHIZO'];
 
         } else {
             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
             echo "Si existe el registro  ";
-            $sql = $dbConn->prepare("SELECT * FROM hechizo WHERE ID_HECHIZO=:ID_HECHIZO");
-            $sql->bindValue(':ID_HECHIZO', $_GET['ID_HECHIZO']);
+            $sql = $dbConn->prepare("SELECT hechizo.NOMBRE_HECHIZO, hechizo.EFECTO_HECHIZO, hechizo.DURACION_HECHIZO FROM `hechizo` 
+            WHERE hechizo.EFECTO_HECHIZO LIKE '%' :EFECTO_HECHIZO '%'
+            ORDER BY hechizo.NOMBRE_HECHIZO");
+            $sql->bindValue(':EFECTO_HECHIZO', $_GET['EFECTO_HECHIZO']);
             $sql->execute();
             header("HTTP/1.1 200 OK");
-            echo json_encode($sql->fetch(PDO::FETCH_ASSOC));
+            echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
             exit();
         }
 

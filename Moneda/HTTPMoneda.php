@@ -9,35 +9,62 @@ REALIZA BUSQUEDA ESPECIFICA
  */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     //VALIDA LA BUSQUEDA
-    if (isset($_GET['ID_MONEDA'])) {
-        $sql = $dbConn->prepare("SELECT * FROM moneda where ID_MONEDA=:ID_MONEDA");
-        $sql->bindValue(':ID_MONEDA', $_GET['ID_MONEDA']);
+    if (isset($_GET['MATERIAL_MONEDA'])) {
+        $sql = $dbConn->prepare("SELECT * FROM `moneda` 
+        WHERE moneda.MATERIAL_MONEDA LIKE '%' :MATERIAL_MONEDA '%'");
+        $sql->bindValue(':MATERIAL_MONEDA', $_GET['MATERIAL_MONEDA']);
         $sql->execute();
         $row_count = $sql->fetchColumn();
         //VALIDA SI SE ENCUENTRAN O NO LOS DATOS
         if ($row_count == 0) {
             header("HTTP/1.1 204 No Content");
-            echo "No existe el registro de la moneda con id = ", $_GET['ID_MONEDA'];
+            echo "No existe el registro de la moneda con id = ", $_GET['MATERIAL_MONEDA'];
 
         } else {
             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
             echo "Si existe el registro  ";
-            $sql = $dbConn->prepare("SELECT * FROM moneda where ID_MONEDA=:ID_MONEDA");
-            $sql->bindValue(':ID_MONEDA', $_GET['ID_MONEDA']);
+            $sql = $dbConn->prepare("SELECT moneda.MATERIAL_MONEDA 'MATERIAL', moneda.NOMBRE_MONEDA 'NOMBRE', moneda.CAMBIO_MONEDA 'EQUIVALENTE' FROM `moneda` 
+            WHERE moneda.MATERIAL_MONEDA LIKE '%' :MATERIAL_MONEDA '%' ORDER BY moneda.ID_MONEDA ");
+            $sql->bindValue(':MATERIAL_MONEDA', $_GET['MATERIAL_MONEDA']);
             $sql->execute();
             header("HTTP/1.1 200 OK");
-            echo json_encode($sql->fetch(PDO::FETCH_ASSOC));
+            echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
             exit();
         }
 
     } else {
-        //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
-        $sql = $dbConn->prepare("SELECT * FROM moneda");
-        $sql->execute();
-        $sql->setFetchMode(PDO::FETCH_ASSOC);
-        header("HTTP/1.1 200 OK");
-        echo json_encode($sql->fetchAll());
-        exit();
+        if (isset($_GET['NOMBRE_MONEDA'])) {
+            $sql = $dbConn->prepare("SELECT * FROM `moneda` 
+            WHERE moneda.NOMBRE_MONEDA LIKE '%' :NOMBRE_MONEDA '%'");
+            $sql->bindValue(':NOMBRE_MONEDA', $_GET['NOMBRE_MONEDA']);
+            $sql->execute();
+            $row_count = $sql->fetchColumn();
+            //VALIDA SI SE ENCUENTRAN O NO LOS DATOS
+            if ($row_count == 0) {
+                header("HTTP/1.1 204 No Content");
+                echo "No existe el registro de la moneda con id = ", $_GET['NOMBRE_MONEDA'];
+    
+            } else {
+                //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
+                echo "Si existe el registro  ";
+                $sql = $dbConn->prepare("SELECT moneda.NOMBRE_MONEDA 'NOMBRE', moneda.CAMBIO_MONEDA 'EQUIVALENTE', moneda.MATERIAL_MONEDA 'MATERIAL' FROM `moneda` 
+                WHERE moneda.NOMBRE_MONEDA LIKE '%' :NOMBRE_MONEDA '%' ORDER BY moneda.ID_MONEDA ");
+                $sql->bindValue(':NOMBRE_MONEDA', $_GET['NOMBRE_MONEDA']);
+                $sql->execute();
+                header("HTTP/1.1 200 OK");
+                echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
+                exit();
+            }
+    
+        } else {
+            //MUESTRA TODOS LOS ELEMENTOS DE LA BASE
+            $sql = $dbConn->prepare("SELECT * FROM moneda");
+            $sql->execute();
+            $sql->setFetchMode(PDO::FETCH_ASSOC);
+            header("HTTP/1.1 200 OK");
+            echo json_encode($sql->fetchAll());
+            exit();
+        }
     }
 
 }

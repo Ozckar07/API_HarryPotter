@@ -10,7 +10,8 @@ REALIZA BUSQUEDA ESPECIFICAS
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     //VALIDA LA BUSQUEDA
     if (isset($_GET['TITULO_LIBRO'])) {
-        $sql = $dbConn->prepare("SELECT * FROM libros WHERE TITULO_LIBRO");
+        $sql = $dbConn->prepare("SELECT libros.CRONOLOGIA_LIBRO AS 'CRONOLOGÍA', libros.TITULO_LIBRO AS 'TÍTULO', libros.SINOPSIS_LIBRO AS 'SINÓPSIS', libros.EDITORIAL_LIBRO AS 'EDITORIAL', libros.ANO_PUBLICACION_LIBRO AS 'AÑO DE PUBLICACIÓN' FROM `libros` 
+        WHERE libros.TITULO_LIBRO LIKE '%' :TITULO_LIBRO '%'");
         $sql->bindValue(':TITULO_LIBRO', $_GET['TITULO_LIBRO']);
         $sql->execute();
         $row_count = $sql->fetchColumn();
@@ -22,11 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             //REALIZA LA BUSQUEDA Y OBTIENE LOS DATOS
             echo "Si existe el registro  ";
-            $sql = $dbConn->prepare("SELECT * FROM libros WHERE libros.TITULO_LIBRO LIKE TITULO_LIBRO=:TITULO_LIBRO ");
+            $sql = $dbConn->prepare("SELECT libros.CRONOLOGIA_LIBRO AS 'CRONOLOGÍA', libros.TITULO_LIBRO AS 'TÍTULO', libros.SINOPSIS_LIBRO AS 'SINÓPSIS', libros.EDITORIAL_LIBRO AS 'EDITORIAL', libros.ANO_PUBLICACION_LIBRO AS 'AÑO DE PUBLICACIÓN' FROM `libros` 
+            WHERE libros.TITULO_LIBRO LIKE '%' :TITULO_LIBRO '%'
+            ORDER BY libros.ANO_PUBLICACION_LIBRO");
             $sql->bindValue(':TITULO_LIBRO', $_GET['TITULO_LIBRO']);
             $sql->execute();
             header("HTTP/1.1 200 OK");
-            echo json_encode($sql->fetch(PDO::FETCH_ASSOC));
+            echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
             exit();
         }
 
