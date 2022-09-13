@@ -158,8 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 }
-
-//================================================================ CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+//======================================================= CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_UNIVERSO'])) {
         $sql = $dbConn->prepare("SELECT * FROM universomagico where ID_UNIVERSO=:ID_UNIVERSO");

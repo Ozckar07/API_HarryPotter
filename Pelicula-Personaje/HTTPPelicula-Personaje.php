@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 }
-// ======================================================================================================CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
+// =================================================================CREA UN NUEVO ELEMENTO EN LA BASE DE DATOS
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['ID_PELICULA']) && isset($_POST['ID_PERSONAJE'])) {
         $sql = $dbConn->prepare("SELECT * FROM pelicula_personaje WHERE ID_PELICULA=:ID_PELICULA AND ID_PERSONAJE=:ID_PERSONAJE");
@@ -268,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-//==============================================================================================================BORRA EL ELEMENTO SEGUN EL ID
+//=======================================================================BORRA EL ELEMENTO SEGUN EL ID
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if (isset($_GET['ID_PERSONAJE']) && isset($_GET['ID_PERSONAJE'])) {
         $sql = $dbConn->prepare("SELECT COUNT(*) FROM pelicula_personaje where ID_PERSONAJE=:ID_PERSONAJE AND ID_PELICULA = :ID_PELICULA");
@@ -297,7 +297,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     }
 }
 
-//=================================================================================================ACTUALIZA Y MODIFICA LAS RELACIONES DENTRE PELICULA Y PERSONAJE
+//===============================================================ACTUALIZA Y MODIFICA LAS RELACIONES DENTRE PELICULA Y PERSONAJE
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if (isset($_GET['ID_PERSONAJE']) && isset($_GET['ID_PELICULA'])) {
         $sql = $dbConn->prepare("SELECT * FROM pelicula_personaje where ID_PERSONAJE=:ID_PERSONAJE AND ID_PELICULA=:ID_PELICULA");
