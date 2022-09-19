@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             LIKE '%' :APELLIDO_PERSONAJE '%'
             GROUP BY personaje.NOMBRE_PERSONAJE
             ORDER BY personaje.FECHA_NACIMIENTO_PERSONAJE");
-            $sql->bindValue(':APELLIDO_PERSONAJE', $_GET['APELLIDO_PERSONAJE']);
+            $sql->bindValue(':APELLIDO_PERSONAJE', $GET['APELLIDO_PERSONAJE']);
             $sql->execute();
             header("HTTP/1.1 200 OK");
             echo json_encode($sql->fetchAll(PDO::FETCH_ASSOC));
